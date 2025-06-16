@@ -66,4 +66,34 @@ def check_win(player):
     if [board[i][2 - i] for i in range(3)].count(player) == 3:
         return True
     return False
+#PawełO
+def is_board_full():
+    return all(cell != 0 for row in board for cell in row)
+
+
+def draw_winner(player):
+    text = FONT.render(f"Gracz {player} wygrywa!", True, TEXT_COLOR)
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - BOTTOM_PANEL + 25))
+
+
+def draw_tie():
+    text = FONT.render("Remis!", True, TEXT_COLOR)
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - BOTTOM_PANEL + 25))
+
+
+def draw_turn(player):
+    text = SMALL_FONT.render(f"Tura: Gracz {player} ('{'O' if player == 1 else 'X'}')", True, TURN_COLOR)
+    screen.blit(text, (20, HEIGHT - BOTTOM_PANEL + 10))
+    instruction = SMALL_FONT.render("Naciśnij R, aby zrestartować", True, TURN_COLOR)
+    screen.blit(instruction, (WIDTH - instruction.get_width() - 10, HEIGHT - BOTTOM_PANEL + 10))
+
+
+def restart():
+    global board, game_over, player
+    board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+    screen.fill(BG_COLOR)
+    draw_lines()
+    game_over = False
+    player = 1
+
 
