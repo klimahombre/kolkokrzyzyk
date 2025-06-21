@@ -136,6 +136,13 @@ def show_start_screen():
                 elif ai_button.collidepoint(e.pos):
                     return True
 
+# Start gry – wywołujemy ekran startowy i restartujemy planszę
+vs_ai = show_start_screen()
+restart()
+
+game_over = False
+player = 1  # 1 = O, 2 = X
+
 # Główna pętla gry
 while True:
     for event in pygame.event.get():
