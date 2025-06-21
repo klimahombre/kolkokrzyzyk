@@ -136,3 +136,50 @@ def show_start_screen():
                 elif ai_button.collidepoint(e.pos):
                     return True
 
+# Główna pętla gry
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        if not game_over:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mx, my = event.pos
+                if my < WIDTH:
+                    row = my // SQSIZE
+                    col = mx // SQSIZE
+                    if board[row][col] == 0:
+                        board[row][col] = player
+                        if check_win(player):
+                            game_over = True
+                        elif is_board_full():
+                            game_over = True
+                        else:
+                            player = 2 if player == 1 else 1
+                            if vs_ai and player == 2:
+                                pygame.time.delay(300)
+                                if ai_move():
+                                    game_over = True
+                                elif is_board_full():
+                                    game_over = True
+                                player = 1
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                restart()
+
+    screen.fill(BG_COLOR)
+    draw_lines()
+    draw_figures()
+
+    if game_over:
+        if is_board_full() and not check_win(1) and not check_win(2):
+            draw_tie()
+        else:
+            draw_winner(1 if player == 1 else 2)
+
+    draw_turn(player)
+    pygame.display.update()
+
+
