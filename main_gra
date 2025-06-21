@@ -4,13 +4,15 @@ import random
 
 pygame.init()
 
-# Ekran
+#Okno gry
 WIDTH, HEIGHT = 600, 700
 ROWS, COLS = 3, 3
 SQSIZE = WIDTH // COLS
-BOTTOM_PANEL = 100  # Dla info
+BOTTOM_PANEL = 100
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Kółko i Krzyżyk")
 
-# Kolory
+#Kolory
 WHITE = (255, 255, 255)
 BG_COLOR = (30, 30, 30)
 LINE_COLOR = (70, 70, 70)
@@ -20,25 +22,18 @@ BUTTON_COLOR = (50, 150, 50)
 TEXT_COLOR = (255, 255, 255)
 TURN_COLOR = (180, 180, 180)
 
-# Czcionki
+#Czcionka
 FONT = pygame.font.SysFont("arial", 40)
 SMALL_FONT = pygame.font.SysFont("arial", 28)
 BIG_FONT = pygame.font.SysFont("arial", 55)
 
-# Ekran
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Kółko i Krzyżyk")
-
-# Moja część - Ola
-# Plansza 
+#Plansza 
 board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
-
 
 def draw_lines():
     for i in range(1, ROWS):
         pygame.draw.line(screen, LINE_COLOR, (0, i * SQSIZE), (WIDTH, i * SQSIZE), 5)
         pygame.draw.line(screen, LINE_COLOR, (i * SQSIZE, 0), (i * SQSIZE, WIDTH), 5)
-
 
 def draw_figures():
     for row in range(ROWS):
@@ -66,27 +61,23 @@ def check_win(player):
     if [board[i][2 - i] for i in range(3)].count(player) == 3:
         return True
     return False
-#PawełO
+
 def is_board_full():
     return all(cell != 0 for row in board for cell in row)
-
 
 def draw_winner(player):
     text = FONT.render(f"Gracz {player} wygrywa!", True, TEXT_COLOR)
     screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - BOTTOM_PANEL + 25))
 
-
 def draw_tie():
     text = FONT.render("Remis!", True, TEXT_COLOR)
     screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - BOTTOM_PANEL + 25))
-
 
 def draw_turn(player):
     text = SMALL_FONT.render(f"Tura: Gracz {player} ('{'O' if player == 1 else 'X'}')", True, TURN_COLOR)
     screen.blit(text, (20, HEIGHT - BOTTOM_PANEL + 10))
     instruction = SMALL_FONT.render("Naciśnij R, aby zrestartować", True, TURN_COLOR)
     screen.blit(instruction, (WIDTH - instruction.get_width() - 10, HEIGHT - BOTTOM_PANEL + 10))
-
 
 def restart():
     global board, game_over, player
@@ -103,14 +94,12 @@ def draw_button(text, y):
     screen.blit(txt, (rect.centerx - txt.get_width() // 2, rect.centery - txt.get_height() // 2))
     return rect
 
-
 def ai_move():
     empty = [(r, c) for r in range(3) for c in range(3) if board[r][c] == 0]
     if empty:
         row, col = random.choice(empty)
         board[row][col] = 2
         return check_win(2)
-
 
 def show_start_screen():
     screen.fill(BG_COLOR)
@@ -121,9 +110,7 @@ def show_start_screen():
     pvp_button = draw_button("Gracz vs Gracz", 250)
     ai_button = draw_button("Gracz vs SI", 350)
 
-
-    pygame.display.update()
-
+pygame.display.update()
 
     while True:
         for e in pygame.event.get():
@@ -136,14 +123,13 @@ def show_start_screen():
                 elif ai_button.collidepoint(e.pos):
                     return True
 
-# Start gry – wywołujemy ekran startowy i restartujemy planszę
+#Start gry
 vs_ai = show_start_screen()
 restart()
 
 game_over = False
 player = 1  # 1 = O, 2 = X
 
-# Główna pętla gry
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
