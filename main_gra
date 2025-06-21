@@ -106,11 +106,10 @@ def show_start_screen():
     title = BIG_FONT.render("Kółko i Krzyżyk", True, TEXT_COLOR)
     screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 100))
 
-
     pvp_button = draw_button("Gracz vs Gracz", 250)
     ai_button = draw_button("Gracz vs SI", 350)
 
-pygame.display.update()
+    pygame.display.update()  # <- Poprawne wcięcie
 
     while True:
         for e in pygame.event.get():
