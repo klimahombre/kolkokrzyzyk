@@ -96,4 +96,43 @@ def restart():
     game_over = False
     player = 1
 
+def draw_button(text, y):
+    rect = pygame.Rect(WIDTH // 2 - 150, y, 300, 60)
+    pygame.draw.rect(screen, BUTTON_COLOR, rect, border_radius=10)
+    txt = FONT.render(text, True, TEXT_COLOR)
+    screen.blit(txt, (rect.centerx - txt.get_width() // 2, rect.centery - txt.get_height() // 2))
+    return rect
+
+
+def ai_move():
+    empty = [(r, c) for r in range(3) for c in range(3) if board[r][c] == 0]
+    if empty:
+        row, col = random.choice(empty)
+        board[row][col] = 2
+        return check_win(2)
+
+
+def show_start_screen():
+    screen.fill(BG_COLOR)
+    title = BIG_FONT.render("Kółko i Krzyżyk", True, TEXT_COLOR)
+    screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 100))
+
+
+    pvp_button = draw_button("Gracz vs Gracz", 250)
+    ai_button = draw_button("Gracz vs SI", 350)
+
+
+    pygame.display.update()
+
+
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if e.type == pygame.MOUSEBUTTONDOWN:
+                if pvp_button.collidepoint(e.pos):
+                    return False
+                elif ai_button.collidepoint(e.pos):
+                    return True
 
