@@ -8,3 +8,12 @@ def draw_lines():
         pygame.draw.line(screen, LINE_COLOR, (0, i * SQSIZE), (WIDTH, i * SQSIZE), 5)
         pygame.draw.line(screen, LINE_COLOR, (i * SQSIZE, 0), (i * SQSIZE, WIDTH), 5)
 
+#dodanie funkcji oceniającej planszę i zwraca 10, jeśli AI (gracz 2) wygrywa, -10, jeśli gracz ludzki (gracz 1) wygrywa, 0, jeśli remis lub gra nie jest zakończona
+
+def evaluate(board):
+    if check_win(2): # AI (Player 2) wins
+        return 10
+    elif check_win(1): # Human (Player 1) wins
+        return -10
+    else:
+        return 0
