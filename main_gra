@@ -4,7 +4,6 @@ import random
 
 pygame.init()
 
-#Okno gry
 WIDTH, HEIGHT = 600, 700
 ROWS, COLS = 3, 3
 SQSIZE = WIDTH // COLS
@@ -12,7 +11,6 @@ BOTTOM_PANEL = 100
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Kółko i Krzyżyk")
 
-#Kolory
 WHITE = (255, 255, 255)
 BG_COLOR = (30, 30, 30)
 LINE_COLOR = (70, 70, 70)
@@ -22,13 +20,13 @@ BUTTON_COLOR = (50, 150, 50)
 TEXT_COLOR = (255, 255, 255)
 TURN_COLOR = (180, 180, 180)
 
-#Czcionka
 FONT = pygame.font.SysFont("arial", 40)
 SMALL_FONT = pygame.font.SysFont("arial", 28)
 BIG_FONT = pygame.font.SysFont("arial", 55)
 
-#Plansza 
 board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+
+vs_ai = False # Dodana zmienna globalna
 
 def draw_lines():
     for i in range(1, ROWS):
@@ -80,7 +78,7 @@ def draw_turn(player):
     screen.blit(instruction, (WIDTH - instruction.get_width() - 10, HEIGHT - BOTTOM_PANEL + 10))
 
 def restart():
-    global board, game_over, player
+    global board, game_over, player, vs_ai
     board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
     screen.fill(BG_COLOR)
     draw_lines()
@@ -94,12 +92,66 @@ def draw_button(text, y):
     screen.blit(txt, (rect.centerx - txt.get_width() // 2, rect.centery - txt.get_height() // 2))
     return rect
 
+def evaluate(board):
+    if check_win(2):
+        return 10
+    elif check_win(1):
+        return -10
+    else:
+        return 0
+
+def minimax(board, depth, is_max):
+    score = evaluate(board)
+
+    if score == 10:
+        return score
+    if score == -10:
+        return score
+    if is_board_full():
+        return 0
+
+    if is_max:
+        best = -sys.maxsize
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == 0:
+                    board[r][c] = 2
+                    best = max(best, minimax(board, depth + 1, not is_max))
+                    board[r][c] = 0
+        return best
+    else:
+        best = sys.maxsize
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == 0:
+                    board[r][c] = 1
+                    best = min(best, minimax(board, depth + 1, not is_max))
+                    board[r][c] = 0
+        return best
+
+def find_best_move(board):
+    best_val = -sys.maxsize
+    best_move = (-1, -1)
+
+    for r in range(ROWS):
+        for c in range(COLS):
+            if board[r][c] == 0:
+                board[r][c] = 2
+                move_val = minimax(board, 0, False)
+                board[r][c] = 0
+
+                if move_val > best_val:
+                    best_move = (r, c)
+                    best_val = move_val
+    return best_move
+
 def ai_move():
-    empty = [(r, c) for r in range(3) for c in range(3) if board[r][c] == 0]
-    if empty:
-        row, col = random.choice(empty)
-        board[row][col] = 2
-        return check_win(2)
+    if not is_board_full():
+        row, col = find_best_move(board)
+        if row != -1 and col != -1:
+            board[row][col] = 2
+            return check_win(2)
+    return False
 
 def show_start_screen():
     screen.fill(BG_COLOR)
@@ -109,7 +161,7 @@ def show_start_screen():
     pvp_button = draw_button("Gracz vs Gracz", 250)
     ai_button = draw_button("Gracz vs SI", 350)
 
-    pygame.display.update()  # <- Poprawne wcięcie
+    pygame.display.update()
 
     while True:
         for e in pygame.event.get():
@@ -122,12 +174,12 @@ def show_start_screen():
                 elif ai_button.collidepoint(e.pos):
                     return True
 
-#Start gry
+global vs_ai
 vs_ai = show_start_screen()
 restart()
 
 game_over = False
-player = 1  # 1 = O, 2 = X
+player = 1
 
 while True:
     for event in pygame.event.get():
@@ -157,9 +209,9 @@ while True:
                                     game_over = True
                                 player = 1
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                restart()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    restart()
 
     screen.fill(BG_COLOR)
     draw_lines()
@@ -169,9 +221,14 @@ while True:
         if is_board_full() and not check_win(1) and not check_win(2):
             draw_tie()
         else:
-            draw_winner(1 if player == 1 else 2)
+            if check_win(1):
+                draw_winner(1)
+            elif check_win(2):
+                draw_winner(2)
+            else:
+                draw_tie()
 
-    draw_turn(player)
+    else:
+        draw_turn(player)
+
     pygame.display.update()
-
-
