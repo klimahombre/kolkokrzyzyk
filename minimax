@@ -17,3 +17,32 @@ def evaluate(board):
         return -10
     else:
         return 0
+
+def minimax(board, depth, is_max):
+    score = evaluate(board)
+
+    if score == 10:
+        return score
+    if score == -10:
+        return score
+    if is_board_full():
+        return 0
+
+    if is_max:
+        best = -sys.maxsize
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == 0:
+                    board[r][c] = 2
+                    best = max(best, minimax(board, depth + 1, not is_max))
+                    board[r][c] = 0
+        return best
+    else:
+        best = sys.maxsize
+        for r in range(ROWS):
+            for c in range(COLS):
+                if board[r][c] == 0:
+                    board[r][c] = 1
+                    best = min(best, minimax(board, depth + 1, not is_max))
+                    board[r][c] = 0
+        return best
