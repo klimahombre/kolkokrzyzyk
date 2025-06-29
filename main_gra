@@ -1,6 +1,6 @@
 import pygame
 import sys
-from logic import check_win, is_board_full, ai_move  # importujemy logikę gry
+from logic import check_win, is_board_full, ai_move, ROWS, COLS, board
 
 pygame.init()
 
