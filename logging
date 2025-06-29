@@ -1,1 +1,50 @@
+#BRUDNOPIS#
 
+import logging
+
+# Konfiguracja logowania
+logging.basicConfig(
+    filename="game.log",     # Nazwa pliku logów
+    level=logging.INFO,      # Poziom logowania (INFO, DEBUG, WARNING, ERROR)
+    format="%(asctime)s - %(levelname)s - %(message)s"
+
+
+    def ai_move():
+    best_score = -float('inf')
+    best_move = None
+
+    for row in range(ROWS):
+        for col in range(COLS):
+            if board[row][col] == 0:
+                board[row][col] = 2
+                score = minimax(board, 0, False)
+                board[row][col] = 0
+                logging.debug(f"AI ocenia ruch ({row}, {col}) z wynikiem {score}")
+                if score > best_score:
+                    best_score = score
+                    best_move = (row, col)
+
+    if best_move:
+        r, c = best_move
+        board[r][c] = 2
+        logging.info(f"AI wykonuje ruch: ({r}, {c}) z oceną: {best_score}")
+        return check_win(2)
+
+
+        if game_over:
+    if is_board_full() and not check_win(1) and not check_win(2):
+        logging.info("Gra zakończona remisem.")
+    else:
+        winner = 1 if player == 1 else 2
+        logging.info(f"Gra zakończona. Wygrał Gracz {winner}.")
+
+
+
+def restart():
+    global board, game_over, player
+    board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+    screen.fill(BG_COLOR)
+    draw_lines()
+    game_over = False
+    player = 1
+    logging.info("Gra została zrestartowana.")
