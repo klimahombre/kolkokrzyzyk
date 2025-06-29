@@ -1,3 +1,7 @@
+import sys
+
+ROWS, COLS = 3, 3
+
 def check_win(board, player):
     # Wiersze
     for row in board:
