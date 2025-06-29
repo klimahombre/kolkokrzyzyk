@@ -80,4 +80,14 @@ def ai_move():
             return check_win(2)
     return False
 
+# Zmieniłem def restart tak, że resetuje grę, ale teraz pamięta, czy graliśmy z botem, czy z kolegą.
+
+def restart():
+    global board, game_over, player, vs_ai
+    board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+    screen.fill(BG_COLOR)
+    draw_lines()
+    game_over = False
+    player = 1
+
 
