@@ -46,3 +46,21 @@ def minimax(board, depth, is_max):
                     best = min(best, minimax(board, depth + 1, not is_max))
                     board[r][c] = 0
         return best
+
+def find_best_move(board):
+    best_val = -sys.maxsize
+    best_move = (-1, -1)
+
+    for r in range(ROWS):
+        for c in range(COLS):
+            if board[r][c] == 0:
+                board[r][c] = 2
+                move_val = minimax(board, 0, False)
+                board[r][c] = 0
+
+                if move_val > best_val:
+                    best_move = (r, c)
+                    best_val = move_val
+    return best_move
+
+
