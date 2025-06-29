@@ -1,1 +1,10 @@
+#Plansza 
+board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+
+vs_ai = False #zmienna globalna
+
+def draw_lines():
+    for i in range(1, ROWS):
+        pygame.draw.line(screen, LINE_COLOR, (0, i * SQSIZE), (WIDTH, i * SQSIZE), 5)
+        pygame.draw.line(screen, LINE_COLOR, (i * SQSIZE, 0), (i * SQSIZE, WIDTH), 5)
 
