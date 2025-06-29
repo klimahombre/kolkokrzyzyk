@@ -202,15 +202,16 @@ while True:
                             player = 2 if player == 1 else 1
                             if vs_ai and player == 2:
                                 pygame.time.delay(300)
-                                if ai_move():
+                                ai_moved = ai_move() # Zapisz wynik ruchu AI
+                                if ai_moved: # Jeśli AI wykonało ruch
                                     game_over = True
                                 elif is_board_full():
                                     game_over = True
-                                player = 1
+                                player = 1 # Zawsze wracamy do gracza 1 po turze AI
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    restart()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                restart()
 
     screen.fill(BG_COLOR)
     draw_lines()
@@ -220,11 +221,12 @@ while True:
         if is_board_full() and not check_win(1) and not check_win(2):
             draw_tie()
         else:
+            # Sprawdzamy, kto faktycznie wygrał
             if check_win(1):
                 draw_winner(1)
             elif check_win(2):
                 draw_winner(2)
-            else:
+            else: # Ten else if nie powinien być potrzebny, bo is_board_full() i check_win() to pokrywają
                 draw_tie()
 
     else:
