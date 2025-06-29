@@ -1,0 +1,17 @@
+#BRUDNOPIS#
+
+cProfile
+
+import cProfile
+import pstats
+
+
+if __name__ == "__main__":
+    profiler = cProfile.Profile()
+    profiler.enable()
+
+    main()
+
+    profiler.disable()
+    stats = pstats.Stats(profiler).sort_stats("cumtime")  # lub "tottime"
+    stats.print_stats(20)  # Pokaże 20 najcięższych funkcji
