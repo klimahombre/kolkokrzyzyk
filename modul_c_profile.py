@@ -1,9 +1,9 @@
 import cProfile
 import pstats
 
-cProfile.run('import main_gra', 'profiling_results.prof')
+cProfile.run('import main_gra', 'rezultat_profilowania.prof')
 
-stats = pstats.Stats('profiling_results.prof')
+stats = pstats.Stats('rezultat_profilowania.prof')
 stats.strip_dirs()
-stats.sort_stats('cumulative')  # Możesz zmienić na 'time', 'calls', itp.
-stats.print_stats(30)  # Pokaż top 30 najbardziej kosztownych funkcji
+stats.sort_stats('cumulative') 
+stats.print_stats(30) 
