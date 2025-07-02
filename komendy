@@ -1,3 +1,5 @@
 cProfile:
 python modul_c_profile.py
 
+snakeviz:
+snakeviz rezultat_profilowania.prof
