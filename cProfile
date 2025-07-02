@@ -1,17 +1,9 @@
-#BRUDNOPIS#
-
-cProfile
-
 import cProfile
 import pstats
 
+cProfile.run('import main_gra', 'profiling_results.prof')
 
-if __name__ == "__main__":
-    profiler = cProfile.Profile()
-    profiler.enable()
-
-    main()
-
-    profiler.disable()
-    stats = pstats.Stats(profiler).sort_stats("cumtime")  # lub "tottime"
-    stats.print_stats(20)  # Pokaże 20 najcięższych funkcji
+stats = pstats.Stats('profiling_results.prof')
+stats.strip_dirs()
+stats.sort_stats('cumulative')  # Możesz zmienić na 'time', 'calls', itp.
+stats.print_stats(30)  # Pokaż top 30 najbardziej kosztownych funkcji
