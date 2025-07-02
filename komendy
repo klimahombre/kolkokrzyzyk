@@ -1,0 +1,3 @@
+cProfile:
+python modul_c_profile.py
+
