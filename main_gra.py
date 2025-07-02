@@ -1,6 +1,16 @@
 import pygame
 import sys
+import time
+import logging
 from logic import check_win, is_board_full
+
+open('logi.log', 'w').close()
+
+logging.basicConfig(
+    filename='logi.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 pygame.init()
 
@@ -26,6 +36,7 @@ BIG_FONT = pygame.font.SysFont("arial", 55)
 
 board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
 vs_ai = False
+start_time = 0
 
 
 def draw_lines():
@@ -52,11 +63,15 @@ def draw_figures():
 def draw_winner(player):
     text = FONT.render(f"Gracz {player} wygrywa!", True, TEXT_COLOR)
     screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - BOTTOM_PANEL + 25))
+    duration = format_time(time.time() - start_time)
+    logging.info(f"Gracz {player} wygrał! Czas gry: {duration}")
 
 
 def draw_tie():
     text = FONT.render("Remis!", True, TEXT_COLOR)
     screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - BOTTOM_PANEL + 25))
+    duration = format_time(time.time() - start_time)
+    logging.info(f"Remis! Czas gry: {duration}")
 
 
 def draw_turn(player):
@@ -68,12 +83,14 @@ def draw_turn(player):
 
 
 def restart():
-    global board, game_over, player
+    global board, game_over, player, start_time
     board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
     screen.fill(BG_COLOR)
     draw_lines()
     game_over = False
     player = 1
+    start_time = time.time()
+    logging.info("Gra została zrestartowana")
 
 
 def draw_button(text, y):
@@ -171,7 +188,12 @@ def show_start_screen():
                     return True
 
 
-# --- Start gry ---
+def format_time(seconds):
+    m, s = divmod(int(seconds), 60)
+    h, m = divmod(m, 60)
+    return f"{h:02d}:{m:02d}:{s:02d}"
+
+
 vs_ai = show_start_screen()
 restart()
 
@@ -181,6 +203,7 @@ player = 1
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            logging.info("Gra zakończona przez użytkownika")
             pygame.quit()
             sys.exit()
 
@@ -192,6 +215,7 @@ while True:
                     col = mx // SQSIZE
                     if board[row][col] == 0:
                         board[row][col] = player
+                        logging.info(f"Gracz {player} wykonał ruch na polu ({row}, {col})")
                         if check_win(board, player):
                             game_over = True
                         elif is_board_full(board):
@@ -201,15 +225,16 @@ while True:
                             if vs_ai and player == 2:
                                 pygame.time.delay(300)
                                 ai_moved = ai_move()
+                                logging.info("Ruch AI")
                                 if ai_moved:
                                     game_over = True
                                 elif is_board_full(board):
                                     game_over = True
                                 player = 1
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                restart()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    restart()
 
     screen.fill(BG_COLOR)
     draw_lines()
