@@ -61,3 +61,19 @@ def test_check_win_diagonal():
         [1, 0, 2]
     ]
     assert check_win(board, 2)
+
+def test_is_board_full_true():
+    board = [
+        [1, 2, 1],
+        [2, 1, 2],
+        [2, 1, 2]
+    ]
+    assert is_board_full(board)
+
+def test_is_board_full_false():
+    board = [
+        [1, 2, 0],
+        [2, 1, 2],
+        [2, 1, 2]
+    ]
+    assert not is_board_full(board)
