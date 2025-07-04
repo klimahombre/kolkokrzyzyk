@@ -1,6 +1,7 @@
 import pytest
-from main import evaluate, format_time, minimax, find_best_move
+from ai_logic import evaluate, minimax, find_best_move
 from logic import check_win, is_board_full
+from utils import format_time # Assuming you put format_time in utils.py
 
 def test_evaluate_win_for_player2():
     board = [
@@ -28,15 +29,31 @@ def test_evaluate_tie():
 
 def test_format_time():
     assert format_time(3675) == "01:01:15"
+    assert format_time(0) == "00:00:00"
+    assert format_time(59) == "00:00:59"
+    assert format_time(60) == "00:01:00"
+    assert format_time(3600) == "01:00:00"
+
 
 def test_minimax_blocks_win():
+    # Player 1 (AI's opponent) is about to win
     board = [
-        [1, 1, 0],
+        [1, 1, 0],  # AI should place 2 at (0,2) to block
         [0, 2, 0],
-        [0, 0, 2]
+        [0, 0, 0]
     ]
-    best = find_best_move(board)
-    assert best == (0, 2)
+    best_move = find_best_move(board)
+    assert best_move == (0, 2)
+
+def test_minimax_finds_winning_move():
+    # AI (player 2) is about to win
+    board = [
+        [2, 2, 0],  # AI should place 2 at (0,2) to win
+        [0, 1, 0],
+        [1, 0, 1]
+    ]
+    best_move = find_best_move(board)
+    assert best_move == (0, 2)
 
 def test_check_win_row():
     board = [
@@ -45,6 +62,7 @@ def test_check_win_row():
         [0, 0, 2]
     ]
     assert check_win(board, 1)
+    assert not check_win(board, 2)
 
 def test_check_win_column():
     board = [
@@ -53,6 +71,7 @@ def test_check_win_column():
         [1, 0, 2]
     ]
     assert check_win(board, 1)
+    assert not check_win(board, 2)
 
 def test_check_win_diagonal():
     board = [
@@ -61,6 +80,7 @@ def test_check_win_diagonal():
         [1, 0, 2]
     ]
     assert check_win(board, 2)
+    assert not check_win(board, 1)
 
 def test_is_board_full_true():
     board = [
@@ -77,4 +97,3 @@ def test_is_board_full_false():
         [2, 1, 2]
     ]
     assert not is_board_full(board)
-
