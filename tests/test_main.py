@@ -1,7 +1,6 @@
 import pytest
-from ai_logic import evaluate, minimax, find_best_move
+from minimax import evaluate, minimax, find_best_move
 from logic import check_win, is_board_full
-from utils import format_time # Assuming you put format_time in utils.py
 
 def test_evaluate_win_for_player2():
     board = [
@@ -36,9 +35,8 @@ def test_format_time():
 
 
 def test_minimax_blocks_win():
-    # Player 1 (AI's opponent) is about to win
     board = [
-        [1, 1, 0],  # AI should place 2 at (0,2) to block
+        [1, 1, 0],  
         [0, 2, 0],
         [0, 0, 0]
     ]
@@ -46,9 +44,8 @@ def test_minimax_blocks_win():
     assert best_move == (0, 2)
 
 def test_minimax_finds_winning_move():
-    # AI (player 2) is about to win
     board = [
-        [2, 2, 0],  # AI should place 2 at (0,2) to win
+        [2, 2, 0],  
         [0, 1, 0],
         [1, 0, 1]
     ]
