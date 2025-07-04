@@ -77,3 +77,5 @@ def test_is_board_full_false():
         [2, 1, 2]
     ]
     assert not is_board_full(board)
+
+Add test_main.py with pytest tests
