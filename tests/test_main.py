@@ -78,4 +78,3 @@ def test_is_board_full_false():
     ]
     assert not is_board_full(board)
 
-Add test_main.py with pytest tests
