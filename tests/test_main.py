@@ -37,3 +37,27 @@ def test_minimax_blocks_win():
     ]
     best = find_best_move(board)
     assert best == (0, 2)
+
+def test_check_win_row():
+    board = [
+        [1, 1, 1],
+        [0, 2, 0],
+        [0, 0, 2]
+    ]
+    assert check_win(board, 1)
+
+def test_check_win_column():
+    board = [
+        [1, 2, 0],
+        [1, 2, 0],
+        [1, 0, 2]
+    ]
+    assert check_win(board, 1)
+
+def test_check_win_diagonal():
+    board = [
+        [2, 1, 1],
+        [0, 2, 0],
+        [1, 0, 2]
+    ]
+    assert check_win(board, 2)
