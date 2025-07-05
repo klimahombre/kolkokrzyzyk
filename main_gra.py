@@ -3,8 +3,8 @@ import sys
 import time
 import logging
 from logic import check_win, is_board_full
-from ai_logic import evaluate, minimax, find_best_move, ai_move 
-from utils import format_time 
+from minimax import evaluate, minimax, find_best_move, ai_move 
+
 
 
 open('logi.log', 'w').close()
@@ -43,6 +43,12 @@ vs_ai = False
 start_time = 0
 game_over = False
 player = 1
+
+def format_time(seconds):
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    return f"{minutes}m {seconds}s"
+
 
 
 def draw_lines():
