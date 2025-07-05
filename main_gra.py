@@ -142,35 +142,38 @@ if __name__ == "__main__":
     vs_ai = show_start_screen()
     restart()
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                logging.info("Gra zakończona przez użytkownika")
-                pygame.quit()
-                sys.exit()
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            logging.info("Gra zakończona przez użytkownika")
+            pygame.quit()
+            sys.exit()
 
-            if not game_over:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mx, my = event.pos
-                    if my < WIDTH:
-                        row = my // SQSIZE
-                        col = mx // SQSIZE
-                        if board[row][col] == 0:
-                            board[row][col] = player
-                            logging.info(f"Gracz {player} wykonał ruch na polu ({row}, {col})")
-                            if check_win(board, player):
-                                game_over = True
-                            elif is_board_full(board):
-                                game_over = True
-                            else:
-                                player = 2 if player == 1 else 1
-                                if vs_ai and player == 2:
-                                    pygame.time.delay(300)
-                                    ai_play_move()
+     
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                restart()
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:
-                        restart()
+       
+        if not game_over:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mx, my = event.pos
+                if my < WIDTH:
+                    row = my // SQSIZE
+                    col = mx // SQSIZE
+                    if board[row][col] == 0:
+                        board[row][col] = player
+                        logging.info(f"Gracz {player} wykonał ruch na polu ({row}, {col})")
+                        if check_win(board, player):
+                            game_over = True
+                        elif is_board_full(board):
+                            game_over = True
+                        else:
+                            player = 2 if player == 1 else 1
+                            if vs_ai and player == 2:
+                                pygame.time.delay(300)
+                                ai_play_move()
+
 
         screen.fill(BG_COLOR)
         draw_lines()
