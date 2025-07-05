@@ -6,15 +6,12 @@ from logic import check_win, is_board_full
 from minimax import evaluate, minimax, find_best_move, ai_move 
 from utils import format_time
 
-
-
 open('logi.log', 'w').close()
 logging.basicConfig(
     filename='logi.log',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-
 
 pygame.init()
 WIDTH, HEIGHT = 600, 700
@@ -23,7 +20,6 @@ SQSIZE = WIDTH // COLS
 BOTTOM_PANEL = 100
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Kółko i Krzyżyk")
-
 
 WHITE = (255, 255, 255)
 BG_COLOR = (30, 30, 30)
@@ -38,13 +34,11 @@ FONT = pygame.font.SysFont("arial", 40)
 SMALL_FONT = pygame.font.SysFont("arial", 28)
 BIG_FONT = pygame.font.SysFont("arial", 55)
 
-
 board = [[0 for _ in range(COLS)] for _ in range(ROWS)]
 vs_ai = False
 start_time = 0
 game_over = False
 player = 1
-
 
 def draw_lines():
     for i in range(1, ROWS):
@@ -81,7 +75,7 @@ def draw_turn(player):
     symbol = 'O' if player == 1 else 'X'
     text = SMALL_FONT.render(f"Tura: Gracz {player} ('{symbol}')", True, TURN_COLOR)
     screen.blit(text, (20, HEIGHT - BOTTOM_PANEL + 10))
-    instruction = SMALL_FONT.render("Naciśnij R, aby zrestartować", True, TURN_COLOR)
+    instruction = SMALL_FONT.render("R - restart | ESC - menu", True, TURN_COLOR)
     screen.blit(instruction, (WIDTH - instruction.get_width() - 10, HEIGHT - BOTTOM_PANEL + 10))
 
 def draw_button(text, y):
@@ -137,43 +131,42 @@ def ai_play_move():
             return True
     return False
 
-
 if __name__ == "__main__": 
     vs_ai = show_start_screen()
     restart()
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            logging.info("Gra zakończona przez użytkownika")
-            pygame.quit()
-            sys.exit()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                logging.info("Gra zakończona przez użytkownika")
+                pygame.quit()
+                sys.exit()
 
-     
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                restart()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    restart()
+                elif event.key == pygame.K_ESCAPE:
+                    vs_ai = show_start_screen()
+                    restart()
 
-       
-        if not game_over:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mx, my = event.pos
-                if my < WIDTH:
-                    row = my // SQSIZE
-                    col = mx // SQSIZE
-                    if board[row][col] == 0:
-                        board[row][col] = player
-                        logging.info(f"Gracz {player} wykonał ruch na polu ({row}, {col})")
-                        if check_win(board, player):
-                            game_over = True
-                        elif is_board_full(board):
-                            game_over = True
-                        else:
-                            player = 2 if player == 1 else 1
-                            if vs_ai and player == 2:
-                                pygame.time.delay(300)
-                                ai_play_move()
-
+            if not game_over:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mx, my = event.pos
+                    if my < WIDTH:
+                        row = my // SQSIZE
+                        col = mx // SQSIZE
+                        if board[row][col] == 0:
+                            board[row][col] = player
+                            logging.info(f"Gracz {player} wykonał ruch na polu ({row}, {col})")
+                            if check_win(board, player):
+                                game_over = True
+                            elif is_board_full(board):
+                                game_over = True
+                            else:
+                                player = 2 if player == 1 else 1
+                                if vs_ai and player == 2:
+                                    pygame.time.delay(300)
+                                    ai_play_move()
 
         screen.fill(BG_COLOR)
         draw_lines()
