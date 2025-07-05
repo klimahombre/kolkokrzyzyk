@@ -1,6 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import pytest
 from minimax import evaluate, minimax, find_best_move
 from logic import check_win, is_board_full
+from utils import format_time
+
 
 def test_evaluate_win_for_player2():
     board = [
