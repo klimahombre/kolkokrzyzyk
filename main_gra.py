@@ -73,10 +73,14 @@ def draw_tie():
 
 def draw_turn(player):
     symbol = 'O' if player == 1 else 'X'
+    pygame.draw.line(screen, LINE_COLOR, (0, HEIGHT - BOTTOM_PANEL), (WIDTH, HEIGHT - BOTTOM_PANEL), 2)
+
     text = SMALL_FONT.render(f"Tura: Gracz {player} ('{symbol}')", True, TURN_COLOR)
-    screen.blit(text, (20, HEIGHT - BOTTOM_PANEL + 10))
+    screen.blit(text, (20, HEIGHT - BOTTOM_PANEL + 15))
+
     instruction = SMALL_FONT.render("R - restart | ESC - menu", True, TURN_COLOR)
-    screen.blit(instruction, (WIDTH - instruction.get_width() - 10, HEIGHT - BOTTOM_PANEL + 10))
+    screen.blit(instruction, (WIDTH - instruction.get_width() - 10, HEIGHT - BOTTOM_PANEL + 15))
+
 
 def draw_button(text, y):
     rect = pygame.Rect(WIDTH // 2 - 150, y, 300, 60)
